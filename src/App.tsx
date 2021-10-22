@@ -1,25 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useCallback, useEffect } from 'react';
 
-function App() {
+import * as S from './App.styles';
+import { Character } from './components/Character';
+import { useCharacter } from './hooks/useCharacter';
+
+const App: React.FC = () => {
+  const { x, y, moveLeft, moveUp, moveDown, moveRight, side, name } = useCharacter('Mary');
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    switch(e.code) {
+      case 'KeyA':
+      case 'ArrowLeft':
+        moveLeft();
+        break;
+
+      case 'KeyW':
+      case 'ArrowUp':
+        moveUp();
+        break;
+
+      case 'KeyD':
+      case 'ArrowRight':
+        moveRight();
+        break;
+
+      case 'KeyS':
+      case 'ArrowDown':
+        moveDown();
+        break;
+    }
+  }, [moveDown, moveLeft, moveRight, moveUp])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <S.Container>
+      <S.Map>
+        <Character x={x} y={y} side={side} name={name} />
+      </S.Map>
+    </S.Container>
   );
 }
 
